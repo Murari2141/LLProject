@@ -1,7 +1,7 @@
 from django.db import models
 
-from LLApps.master.models import BaseModel
 
+from LLApps.master.models import BaseModel
 # Create your models here.
 
 class Labour(BaseModel):
@@ -18,7 +18,6 @@ class Labour(BaseModel):
         return self.first_name + " " + self.last_name + "-" + str(self.llid)
     
     def save(self, *args, **kwargs):
-       
         self.email = self.email.lower()
         super(Labour, self).save(*args, **kwargs)
 
@@ -32,4 +31,3 @@ class LabourPersonalInformation(BaseModel):
     profile = models.ImageField(upload_to='Labour_profiles/')
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
     date_of_birth = models.DateField()
-
