@@ -50,7 +50,7 @@ CUSTOM_APPS = [
 ]
 
 THIRD_PARTIES_APPS = [
-    'rest_framework'
+    'rest_framework',
 ]
 
 INSTALLED_APPS += CUSTOM_APPS
