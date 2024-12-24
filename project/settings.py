@@ -102,10 +102,10 @@ if not DEBUG:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'Labour$Labour',
-            'USER': 'Labour',
+            'NAME': 'LLapp$LLapp',
+            'USER': 'LLapp',
             'PASSWORD': 'Test@1234',
-            'HOST': 'llapps.mysql.pythonanywhere-services.com',
+            'HOST': 'LLapp.mysql.pythonanywhere-services.com',
             'PORT': '3306', 
         }
     }
