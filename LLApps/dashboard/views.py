@@ -1,15 +1,18 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib import messages
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
 
 from LLApps.dashboard.forms import contactRequestForm
 from LLApps.labour.models import Labour, LabourPersonalInformation
 from LLApps.master.helpers import validators, emails, tokens, sms, unique
-
 from functools import wraps
 
 import time
 import jwt
+import requests
+import json
 # Create your views here.
 
 def get_labour_from_session(request):
@@ -211,7 +214,43 @@ def dashboard_view(request):
     return render(request, 'dashboard/dashboard.html')
 @login_required
 def parties_view(request):
-    return render(request, 'dashboard/parties.html')
+    labour_id = request.session['LL_labour_id']
+    partyListAPI = f'https://llapps.pythonanywhere.com/api/parties/?labour={labour_id}'
+    response = requests.get(partyListAPI)
+    if response.status_code == 200:
+        parties = response.json()
+        return render(request, 'dashboard/parties.html', {'parties': parties})
+
+@csrf_exempt
+@login_required
+def add_new_party(request):
+    if request.method == 'POST':
+        firm_name_ = request.POST['firm_name']
+        party_name_ = request.POST['party_name']
+        party_mobile_ = request.POST['party_mobile']
+        address_ = request.POST['address']
+        description_ = request.POST['description']
+
+        partyListAPI = 'https://llapps.pythonanywhere.com/api/parties/'
+            
+        party_data = {
+            "firm_name": firm_name_,
+            "party_name": party_name_,
+            "party_mobile":party_mobile_ ,
+            "address": address_,
+            "description": description_,
+            "labour": request.session['LL_labour_id']
+        }
+
+        response = requests.post(partyListAPI, json=party_data)
+
+        if response.status_code == 201:
+            messages.success(request, 'Party added successfully.')
+            return redirect('parties_view')
+
+
+    
+
 @login_required
 def tasks_view(request):
     return render(request, 'dashboard/tasks.html')
