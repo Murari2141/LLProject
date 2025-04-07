@@ -215,7 +215,7 @@ def dashboard_view(request):
 @login_required
 def parties_view(request):
     labour_id = request.session['LL_labour_id']
-    partyListAPI = f'https://llapps.pythonanywhere.com/api/parties/?labour={labour_id}'
+    partyListAPI = f'https://llapp.pythonanywhere.com/api/parties/?labour={labour_id}'
     response = requests.get(partyListAPI)
     if response.status_code == 200:
         parties = response.json()
@@ -231,7 +231,7 @@ def add_new_party(request):
         address_ = request.POST['address']
         description_ = request.POST['description']
 
-        partyListAPI = 'https://llapps.pythonanywhere.com/api/parties/'
+        partyListAPI = 'https://llapp.pythonanywhere.com/api/parties/'
             
         party_data = {
             "firm_name": firm_name_,
@@ -249,6 +249,14 @@ def add_new_party(request):
             return redirect('parties_view')
 
 
+@login_required
+def tasks_view(request):
+    labour_id = request.session['LL_labour_id']
+    taskListAPI = f'https://llapp.pythonanywhere.com/api/tasks/?labour={labour_id}'
+    response = requests.get(taskListAPI)
+    if response.status_code == 200:
+        tasks = response.json()
+        return render(request, 'dashboard/tasks.html', {'tasks': tasks})
     
 
 @login_required
